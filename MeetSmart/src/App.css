@@ -83,3 +83,16 @@
 .recording-button.stop {
   background-color: lightcoral;
 }
+/* Add these styles to `MeetSmart/src/App.css` */
+/* Add these styles to `MeetSmart/src/App.css` */
+.validation-message {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
+
+.success-message {
+  color: green;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+}
