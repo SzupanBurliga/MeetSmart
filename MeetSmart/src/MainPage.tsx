@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { ReactMediaRecorder } from 'react-media-recorder';
 import './App.css';
 
 function EmailForm() {
@@ -8,6 +9,7 @@ function EmailForm() {
     const [isEmailSubmitted, setIsEmailSubmitted] = useState(false);
     const [validationMessage, setValidationMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+    const [recordingErrorMessage, setRecordingErrorMessage] = useState('');
 
     const validateEmail = (email: string) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -22,18 +24,25 @@ function EmailForm() {
         }
         setValidationMessage('');
         setSuccessMessage('Email submitted successfully');
-        if (isEmailSubmitted) {
-            setIsEmailSubmitted(false);
-        } else {
-            setIsEmailSubmitted(true);
-        }
+        setIsEmailSubmitted(true);
     };
 
     const handleClear = () => {
         setEmail('');
+        setIsEmailSubmitted(false);
     };
 
-    const toggleRecording = () => {
+    const toggleRecording = (startRecording: () => void, stopRecording: () => void) => {
+        if (!isEmailSubmitted) {
+            setRecordingErrorMessage('Input your email before starting recording');
+            return;
+        }
+        setRecordingErrorMessage('');
+        if (isRecording) {
+            stopRecording();
+        } else {
+            startRecording();
+        }
         setIsRecording(!isRecording);
     };
 
@@ -48,31 +57,43 @@ function EmailForm() {
     return (
         <div className="email-form">
             <h1>Notes from a meeting</h1>
-            <button
-                onClick={toggleRecording}
-                className={`recording-button ${isRecording ? 'stop' : 'start'}`}
-            >
-                {isRecording ? 'Stop recording' : 'Start recording'}
-            </button>
-            <button
-                onClick={processMeeting}
-                disabled={isProcessing}
-            >
-                {isProcessing ? 'Processing...' : 'Start processing the meeting'}
-            </button>
-            <div className="email-input-group">
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                />
-                <button onClick={handleSubmit}>
-                    {isEmailSubmitted ? 'Edit' : 'Submit'}
-                </button>
-            </div>
-            {validationMessage && <p className="validation-message">{validationMessage}</p>}
-            {successMessage && <p className="success-message">{successMessage}</p>}
+            <ReactMediaRecorder
+                screen
+                audio
+                render={({ status, startRecording, stopRecording, mediaBlobUrl }) => (
+                    <div>
+                        {status !== 'idle' && status !== 'stopped' && status !== 'recording' && <p>{status}</p>}
+                        <button
+                            onClick={() => toggleRecording(startRecording, stopRecording)}
+                            className={`recording-button ${isRecording ? 'stop' : 'start'}`}
+                            disabled={!isEmailSubmitted}
+                        >
+                            {isRecording ? 'Stop recording' : 'Start recording'}
+                        </button>
+                        {recordingErrorMessage && <p className="error-message">{recordingErrorMessage}</p>}
+                        <button
+                            onClick={processMeeting}
+                            disabled={isProcessing}
+                        >
+                            {isProcessing ? 'Processing...' : 'Start processing the meeting'}
+                        </button>
+                        <div className="email-input-group">
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="Enter your email"
+                            />
+                            <button onClick={handleSubmit}>
+                                {isEmailSubmitted ? 'Edit' : 'Submit'}
+                            </button>
+                        </div>
+                        {validationMessage && <p className="validation-message">{validationMessage}</p>}
+                        {successMessage && <p className="success-message">{successMessage}</p>}
+                        <video src={mediaBlobUrl} controls autoPlay loop />
+                    </div>
+                )}
+            />
         </div>
     );
 }
