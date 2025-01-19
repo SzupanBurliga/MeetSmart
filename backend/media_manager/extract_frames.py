@@ -1,8 +1,7 @@
-import ffmpeg
 import cv2
 import numpy as np
 import os
-import ffmpeg
+import subprocess
 
 def capture_slides(input_video_path, output_video_path):
     """
@@ -14,14 +13,20 @@ def capture_slides(input_video_path, output_video_path):
         output_video_path (str): The path where the new video should be saved.
     """
     try:
-        # Capture frames with significant scene change and set output frame rate
-        ffmpeg.input(input_video_path).output(
-            output_video_path,
-            vf='select=gt(scene\,0.05),setpts=N/TB,fps=1',  # Increased threshold for scene change
-            r=1,  # Set output frame rate to 1 fps
-        ).global_args('-an').run()  # Disable audio
+        # Construct the ffmpeg command
+        command = [
+            'ffmpeg',
+            '-i', input_video_path,
+            '-vf', 'select=gt(scene\,0.05),setpts=N/TB,fps=1',  # Increased threshold for scene change
+            '-r', '1',  # Set output frame rate to 1 fps
+            '-an',  # Disable audio
+            output_video_path
+        ]
+        
+        # Run the command
+        subprocess.run(command, check=True)
         print(f"New video created successfully. Saved as {output_video_path}")
-    except ffmpeg.Error as e:
+    except subprocess.CalledProcessError as e:
         print(f"An error occurred: {e}")
         return None
 
@@ -76,13 +81,16 @@ def extract_unique_frames(input_video_path, output_folder):
     # Release the video capture object
     cap.release()
     print(f"Extraction completed. {saved_frame_count} unique frames saved.")
-# Example usage:
-input_video_path = './uploads/recording.webm'  # Replace with your video file path
-output_folder = './outputs/unique_frames'  # Folder where unique frames will be saved
-cut_video_path = './outputs/cut_video.mp4'  # Path to save the cut
 
+# Example usage:
+input_video_path = './uploads/recording.mp4'  # Replace with your video file path
+output_folder = './outputs/unique_frames'  # Folder where unique frames will be saved
+cut_video_path = './outputs/cut_video.mp4'  # Path to save the cut video
 
 # Extract unique frames from the video
 def get_frames():
     capture_slides(input_video_path, cut_video_path)
     extract_unique_frames(cut_video_path, output_folder)
+
+# Call the function to execute the process
+get_frames()
