@@ -1,6 +1,8 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 import cgi
+import extract_frames
+import extract_audio
 
 # Save the uploaded file in the current directory
 UPLOAD_FOLDER = './uploads/'  # Set the current directory
@@ -57,6 +59,10 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 self._set_cors_headers()
                 self.end_headers()
                 self.wfile.write(b'File uploaded successfully')
+
+                extract_frames.get_frames()
+                extract_audio.get_audio()
+
             except Exception as e:
                 self.send_response(500)
                 self._set_cors_headers()

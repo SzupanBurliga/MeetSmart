@@ -14,7 +14,7 @@ const RecordingComponent: React.FC<RecordingComponentProps> = ({ isEmailSubmitte
 
     const uploadRecording = async (blob: Blob) => {
         const formData = new FormData();
-        formData.append('video', blob, 'recording1212.webm');
+        formData.append('video', blob, 'recording.webm');
 
         try {
             setUploadStatus('Uploading...');

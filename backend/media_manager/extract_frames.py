@@ -17,7 +17,7 @@ def capture_slides(input_video_path, output_video_path):
         # Capture frames with significant scene change and set output frame rate
         ffmpeg.input(input_video_path).output(
             output_video_path,
-            vf='select=gt(scene\,0.001),setpts=N/TB,fps=1',  # Capture frames with significant scene change
+            vf='select=gt(scene\,0.05),setpts=N/TB,fps=1',  # Increased threshold for scene change
             r=1,  # Set output frame rate to 1 fps
         ).global_args('-an').run()  # Disable audio
         print(f"New video created successfully. Saved as {output_video_path}")
@@ -36,7 +36,6 @@ def extract_unique_frames(input_video_path, output_folder):
     """
     # Ensure the output folder exists
     os.makedirs(output_folder, exist_ok=True)
-    
     # Open the video using OpenCV
     cap = cv2.VideoCapture(input_video_path)
     
@@ -46,7 +45,6 @@ def extract_unique_frames(input_video_path, output_folder):
 
     # Initialize variables
     prev_frame = None
-    frame_count = 0
     saved_frame_count = 0
 
     while True:
@@ -61,11 +59,11 @@ def extract_unique_frames(input_video_path, output_folder):
 
         # If it's not the first frame, compare it with the previous frame
         if prev_frame is not None:
-            # Compute the absolute difference between the current and previous frame
-            frame_diff = cv2.absdiff(gray_frame, prev_frame)
+            # Compute the correlation coefficient between the current and previous frame
+            correlation = np.corrcoef(gray_frame.flatten(), prev_frame.flatten())[0, 1]
 
-            # If the difference is significant (i.e., not the same frame), save it
-            if np.sum(frame_diff) > 1000000:  # A threshold to consider frames as different
+            # If the correlation is below a certain threshold, save the frame
+            if correlation < 0.98:  # Adjust this threshold as needed
                 # Save the frame as an image
                 output_image_path = os.path.join(output_folder, f"frame_{saved_frame_count}.png")
                 cv2.imwrite(output_image_path, frame)
@@ -74,20 +72,17 @@ def extract_unique_frames(input_video_path, output_folder):
         
         # Set the current frame as the previous frame for the next comparison
         prev_frame = gray_frame
-        frame_count += 1
 
     # Release the video capture object
     cap.release()
     print(f"Extraction completed. {saved_frame_count} unique frames saved.")
-
 # Example usage:
 input_video_path = './uploads/recording.webm'  # Replace with your video file path
 output_folder = './outputs/unique_frames'  # Folder where unique frames will be saved
 cut_video_path = './outputs/cut_video.mp4'  # Path to save the cut
 
+
 # Extract unique frames from the video
-
-capture_slides(input_video_path, cut_video_path)
-
-
-extract_unique_frames(cut_video_path, output_folder)
+def get_frames():
+    capture_slides(input_video_path, cut_video_path)
+    extract_unique_frames(cut_video_path, output_folder)
