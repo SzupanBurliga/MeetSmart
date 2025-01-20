@@ -1,11 +1,13 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 import cgi
-import extract_frames
-import extract_audio
+import extract_frames, extract_audio
+#import  email_api.emailServices as emailServices
+# Global variable to store the submitted email
+submitted_email = None
 
-# Save the uploaded file in the current directory
-UPLOAD_FOLDER = './uploads/'  # Set the current directory
+# Save the uploaded file in the specified folder
+UPLOAD_FOLDER = './uploads/'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
@@ -22,8 +24,26 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_POST(self):
-        if self.path == '/upload':
-            # Parse the form data posted
+        if self.path == '/submit-email':
+            # Handle email submission
+            content_length = int(self.headers['Content-Length'])
+            post_data = self.rfile.read(content_length)
+            try:
+                global submitted_email
+                submitted_email = post_data.decode('utf-8')  # Save the email
+                print(f"Email received: {submitted_email}")
+                self.send_response(200)
+                self._set_cors_headers()
+                self.end_headers()
+                self.wfile.write(b'Email received successfully')
+            except Exception as e:
+                self.send_response(500)
+                self._set_cors_headers()
+                self.end_headers()
+                self.wfile.write(f'Error processing email: {str(e)}'.encode('utf-8'))
+
+        elif self.path == '/upload':
+            # Handle file upload
             content_type, pdict = cgi.parse_header(self.headers['content-type'])
             if content_type != 'multipart/form-data':
                 self.send_response(400)
@@ -51,8 +71,9 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 with open(video_path, 'wb') as f:
                     f.write(video_data)
 
-                # Log the file name to the console
+                # Log the file name and the associated email
                 print(f"File received and saved: {video_filename}")
+                print(f"Associated email: {submitted_email if submitted_email else 'No email submitted'}")
 
                 # Respond with success and include CORS headers
                 self.send_response(200)
@@ -60,8 +81,7 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
                 self.end_headers()
                 self.wfile.write(b'File uploaded successfully')
 
-                extract_frames.get_frames()
-                extract_audio.get_audio()
+                handle_video_processing()
 
             except Exception as e:
                 self.send_response(500)
@@ -80,5 +100,17 @@ def run(server_class=HTTPServer, handler_class=SimpleHTTPRequestHandler, port=50
     print(f'Server running on port {port}...')
     httpd.serve_forever()
 
+
+def handle_video_processing():
+    print("Extracting frames...")
+    extract_frames.get_frames()  # Pass video path to the function
+
+    print("Extracting audio...")
+    extract_audio.get_audio()  
+
+    # print("Sending email...")
+    # emailServices.send_file_via_email(submitted_email, '../OCR/result.md')
+    #  narazie nie działa bo import trzeba naprawić
+    
 if __name__ == '__main__':
     run()

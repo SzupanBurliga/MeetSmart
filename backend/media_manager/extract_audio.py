@@ -1,6 +1,7 @@
 import ffmpeg
-
+import os
 def extract_audio_from_video(video_path, audio_output_path):
+
     """
     Extract audio from a video file and save it as a separate audio file.
     
@@ -8,6 +9,8 @@ def extract_audio_from_video(video_path, audio_output_path):
         video_path (str): The path to the input video file.
         audio_output_path (str): The path where the output audio file should be saved.
     """
+    if os.path.exists(audio_output_path):
+        os.remove(audio_output_path)
     try:
         # Use ffmpeg to extract the audio from the video
         ffmpeg.input(video_path).output(audio_output_path, acodec='mp3').run()

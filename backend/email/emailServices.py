@@ -61,5 +61,3 @@ def send_file_via_email(recipient_email, file_path, subject="Your Document", bod
         print(f"Error sending email: {e}")
         return False
     
-
-send_file_via_email("test@gmail.com", 'backend\email\email.txt')

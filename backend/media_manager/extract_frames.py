@@ -12,6 +12,8 @@ def capture_slides(input_video_path, output_video_path):
         input_video_path (str): The path to the input video file.
         output_video_path (str): The path where the new video should be saved.
     """
+    if os.path.exists(output_video_path):
+        os.remove(output_video_path)
     try:
         # Construct the ffmpeg command
         command = [
@@ -39,6 +41,12 @@ def extract_unique_frames(input_video_path, output_folder):
         input_video_path (str): The path to the input video file.
         output_folder (str): The folder where unique frames will be saved.
     """
+
+    for filename in os.listdir(output_folder):
+        file_path = os.path.join(output_folder, filename)
+        if os.path.isfile(file_path):  # Ensure it's a file and not a subdirectory
+            os.remove(file_path)
+            
     # Ensure the output folder exists
     os.makedirs(output_folder, exist_ok=True)
     # Open the video using OpenCV
@@ -80,10 +88,11 @@ def extract_unique_frames(input_video_path, output_folder):
 
     # Release the video capture object
     cap.release()
+
     print(f"Extraction completed. {saved_frame_count} unique frames saved.")
 
 # Example usage:
-input_video_path = './uploads/recording.mp4'  # Replace with your video file path
+input_video_path = './uploads/recording.webm'  # Replace with your video file path
 output_folder = './outputs/unique_frames'  # Folder where unique frames will be saved
 cut_video_path = './outputs/cut_video.mp4'  # Path to save the cut video
 
@@ -93,4 +102,4 @@ def get_frames():
     extract_unique_frames(cut_video_path, output_folder)
 
 # Call the function to execute the process
-get_frames()
+#get_frames()
