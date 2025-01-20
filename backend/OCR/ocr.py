@@ -17,17 +17,17 @@ def upload_file(api_key, file_path):
         "Authorization": f"Bearer {api_key}",
     }
     data = {
-        "language": "pl",
+        "language": "pl"
     }
     files = {
-        "file": ("test.png", open(file_path, "rb"), "image/png"),
+        "file": (os.path.basename(file_path), open(file_path, "rb"), "image/png"),
     }
     response = requests.post(url, headers=headers, data=data, files=files)
     if response.status_code == 200:
-        print("Upload Successful:", response.json())
+        print(f"Upload Successful for {file_path}: {response.json()}")
         return response.json().get("id")  # Zwraca ID z odpowiedzi
     else:
-        print("Upload Failed:", response.status_code, response.text)
+        print(f"Upload Failed for {file_path}: {response.status_code} {response.text}")
         return None
 
 # Funkcja do sprawdzania statusu zadania
@@ -61,11 +61,9 @@ def get_job_result(api_key, job_id):
     if response.status_code == 200:
         job_result = response.json()
         markdown_content = job_result.get("markdown")  # Przechwytujemy tylko sekcję markdown
-        print("Markdown Content:")
-        print(markdown_content)  # Można teraz użyć tej zmiennej w kodzie
         return markdown_content
     else:
-        print("Failed to Get Job Result:", response.status_code, response.text)
+        print(f"Failed to Get Job Result: {response.status_code} {response.text}")
         return None
 
 # Główna część skryptu
@@ -73,16 +71,36 @@ if __name__ == "__main__":
     if api_key is None:
         print("API key not found. Please check your .env file.")
     else:
-        file_path = "./test.png"  # Ścieżka do pliku
+        input_folder = "./frames"  # Folder wejściowy z obrazami
+        output_file = "result.md"  # Plik wynikowy
 
-        # 1. Wysyłanie pliku
-        job_id = upload_file(api_key, file_path)
-        
-        if job_id:
-            # 2. Oczekiwanie na zakończenie przetwarzania
-            while True:
-                if check_job_status(api_key, job_id):
-                    # 3. Jeśli status jest "SUCCESS", odbieramy wynik
-                    markdown_content = get_job_result(api_key, job_id)
-                    break
-                time.sleep(5)  # Czekaj 5 sekund przed ponownym sprawdzeniem statusu
+        all_markdown = []  # Lista na wszystkie markdowny
+
+        # Iteracja po plikach w folderze
+        for i, file_name in enumerate(sorted(os.listdir(input_folder))):
+            file_path = os.path.join(input_folder, file_name)
+            
+            if not file_name.endswith(".png"):
+                continue  # Pomijaj pliki, które nie są PNG
+
+            print(f"Processing {file_path}...")
+
+            # 1. Wysyłanie pliku
+            job_id = upload_file(api_key, file_path)
+
+            if job_id:
+                # 2. Oczekiwanie na zakończenie przetwarzania
+                while True:
+                    if check_job_status(api_key, job_id):
+                        # 3. Jeśli status jest "SUCCESS", odbieramy wynik
+                        markdown_content = get_job_result(api_key, job_id)
+                        if markdown_content:
+                            all_markdown.append(f"## Slajd {i + 1}\n\n{markdown_content}\n")
+                        break
+                    time.sleep(5)  # Czekaj 5 sekund przed ponownym sprawdzeniem statusu
+
+        # Zapisz wszystkie wyniki do pliku wynikowego
+        with open(output_file, "w", encoding="utf-8") as f:
+            f.writelines(all_markdown)
+
+        print(f"Results saved to {output_file}")
