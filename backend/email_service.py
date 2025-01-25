@@ -7,7 +7,7 @@ import os
 from dotenv import load_dotenv
 
 
-def send_file_via_email(recipient_email, file_path, subject="Your Document", body="Please find your document attached."):
+def send_email(recipient_email, file_path, subject="Your Document", body="Please find your document attached."):
     """
     Send any file as an email attachment using Gmail SMTP
     

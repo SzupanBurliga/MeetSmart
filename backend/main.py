@@ -1,8 +1,11 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 import cgi
-import extract_frames, extract_audio
-#import  email_api.emailServices as emailServices
+import media_manager.extract_frames as extract_frames
+import media_manager.extract_audio as extract_audio
+import ocr
+import email_service
+import llm_calling
 # Global variable to store the submitted email
 submitted_email = None
 
@@ -103,13 +106,13 @@ def run(server_class=HTTPServer, handler_class=SimpleHTTPRequestHandler, port=50
 
 def handle_video_processing():
     print("Extracting frames...")
-    extract_frames.get_frames()  # Pass video path to the function
+    extract_frames.get_frames('./uploads/recording.webm', 'outputs/unique_frames')  # Pass video path to the function
 
     print("Extracting audio...")
-    extract_audio.get_audio()  
+    extract_audio.get_audio('./uploads/recording.webm', './outputs/output_audio.mp3')  
 
     # print("Sending email...")
-    # emailServices.send_file_via_email(submitted_email, '../OCR/result.md')
+    # email_service.send_email(submitted_email, '../OCR/result.md')
     #  narazie nie działa bo import trzeba naprawić
     
 if __name__ == '__main__':
