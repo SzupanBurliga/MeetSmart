@@ -5,7 +5,7 @@ from groq import Groq
 # Load environment variables from .env
 load_dotenv()
 
-def process_markdown_with_groq(markdown_file, mode, model="llama-3.3-70b-versatile"):
+def process_with_groq(markdown_file, mode, model="llama-3.3-70b-versatile"):
     """
     Reads a Markdown file and sends its content as a user message to the Groq API.
 
@@ -77,15 +77,15 @@ def process_markdown_with_groq(markdown_file, mode, model="llama-3.3-70b-versati
 
 
 # Example usage
-if __name__ == "__main__":
-    try:
-        # Specify the Markdown file and mode
-        markdown_file = "result.md"
-        mode = "cleanup"  # Choose from 'cleanup', 'summarize', 'translate'
+# if __name__ == "__main__":
+#     try:
+#         # Specify the Markdown file and mode
+#         markdown_file = "result.md"
+#         mode = "cleanup"  # Choose from 'cleanup', 'summarize', 'translate'
         
-        # Process the file and print the result
-        response = process_markdown_with_groq(markdown_file, mode)
-        print("Response:")
-        print(response)
-    except Exception as e:
-        print(f"An error occurred: {e}")
+#         # Process the file and print the result
+#         response = process_with_groq(markdown_file, mode)
+#         print("Response:")
+#         print(response)
+#     except Exception as e:
+#         print(f"An error occurred: {e}")

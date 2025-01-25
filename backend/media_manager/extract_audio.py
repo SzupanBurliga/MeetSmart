@@ -1,6 +1,6 @@
 import ffmpeg
 import os
-def extract_audio_from_video(video_path, audio_output_path):
+def get_audio(video_path, audio_output_path):
 
     """
     Extract audio from a video file and save it as a separate audio file.
@@ -23,6 +23,5 @@ def extract_audio_from_video(video_path, audio_output_path):
 video_file_path = './uploads/recording.webm'  # Replace with your video file path
 audio_file_path = './outputs/output_audio.mp3'  # Replace with desired audio output file path
 
-def get_audio():
-    extract_audio_from_video(video_file_path, audio_file_path)
+
 

@@ -91,13 +91,10 @@ def extract_unique_frames(input_video_path, output_folder):
 
     print(f"Extraction completed. {saved_frame_count} unique frames saved.")
 
-# Example usage:
-input_video_path = './uploads/recording.webm'  # Replace with your video file path
-output_folder = './outputs/unique_frames'  # Folder where unique frames will be saved
-cut_video_path = './outputs/cut_video.mp4'  # Path to save the cut video
 
 # Extract unique frames from the video
-def get_frames():
+def get_frames(input_video_path, output_folder):
+    cut_video_path = './outputs/cut_video.mp4'  # Path to save the cut video
     capture_slides(input_video_path, cut_video_path)
     extract_unique_frames(cut_video_path, output_folder)
 
