@@ -28,5 +28,4 @@ __pycache__
 *.mp3
 *.png
 *.md
-
-
+venv/
