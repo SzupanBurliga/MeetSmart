@@ -29,3 +29,7 @@ __pycache__
 *.png
 *.md
 venv/
+*.wav
+models/
+*.json
+*.txt

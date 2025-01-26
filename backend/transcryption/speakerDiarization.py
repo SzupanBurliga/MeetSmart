@@ -1,6 +1,7 @@
 from pathlib import Path
 from pyannote.audio import Pipeline
 import os
+import json
 
 def load_pipeline_from_pretrained(path_to_config: str | Path) -> Pipeline:
     path_to_config = Path(path_to_config)
@@ -25,15 +26,13 @@ def load_pipeline_from_pretrained(path_to_config: str | Path) -> Pipeline:
 
     return pipeline
 
-PATH_TO_CONFIG = "C:/Users/nosta/Desktop/5sem/IO/Projekt/Record-Video/backend-python/models/pyannote_diarization_config.yaml"
+PATH_TO_CONFIG = "D:/Studia/IO/MeetSmart/backend/transcryption/models/pyannote_diarization_config.yaml"
 pipeline = load_pipeline_from_pretrained(PATH_TO_CONFIG)
 
 
 def diarize_audio(wav_file_path):
-    # Wczytanie pliku audio przy użyciu pipeline
     diarization = pipeline(wav_file_path)
 
-    # Przechodzenie po wynikach diarizacji i drukowanie wyników
     results = []
     for turn, _, speaker in diarization.itertracks(yield_label=True):
         results.append({
@@ -42,11 +41,16 @@ def diarize_audio(wav_file_path):
             "end_time": f"{turn.end:.1f}s"
         })
     
-    # Zwrócenie wyników jako lista
+    # Save results to a text file
+    output_dir = '../media_manager/outputs'
+    os.makedirs(output_dir, exist_ok=True)
+    diarization_file_path = os.path.join(output_dir, wav_file_path.rsplit('.', 1)[0] + '_diarization.json')
+    with open(diarization_file_path, 'w', encoding='utf-8') as f:
+        json.dump(results, f, ensure_ascii=False, indent=4)
+
+    print(f"Diarization results saved to {diarization_file_path}")
     return results
 
-
 if __name__ == "__main__":
-    audio_file_path = "test.wav"  # Zaktualizuj tę ścieżkę do właściwej lokalizacji pliku audio
-    results = diarize_audio(audio_file_path)
-    print(results)
+    audio_file_path = "D:/Studia/IO/MeetSmart/backend/transcryption/plik2.mp3"  # Update this path to the correct location of the audio file
+    diarize_audio(audio_file_path)
