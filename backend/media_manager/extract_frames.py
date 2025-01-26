@@ -94,9 +94,9 @@ def extract_unique_frames(input_video_path, output_folder):
 
 # Extract unique frames from the video
 def get_frames(input_video_path, output_folder):
-    cut_video_path = './outputs/cut_video.mp4'  # Path to save the cut video
+    cut_video_path = 'outputs/cut_video.mp4'  # Path to save the cut video
     capture_slides(input_video_path, cut_video_path)
     extract_unique_frames(cut_video_path, output_folder)
 
 # Call the function to execute the process
-#get_frames('uploads/test.mkv', 'outputs/unique_frames')
+#get_frames('uploads/recording.webm', 'outputs/unique_frames')

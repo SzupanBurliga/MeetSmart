@@ -1,6 +1,7 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 import cgi
+import concurrent.futures
 import media_manager.extract_frames as extract_frames
 import media_manager.extract_audio as extract_audio
 import ocr
@@ -104,12 +105,32 @@ def run(server_class=HTTPServer, handler_class=SimpleHTTPRequestHandler, port=50
     httpd.serve_forever()
 
 
-def handle_video_processing():
-    print("Extracting frames...")
-    extract_frames.get_frames('./uploads/recording.webm', 'outputs/unique_frames')  # Pass video path to the function
 
-    print("Extracting audio...")
-    extract_audio.get_audio('./uploads/recording.webm', './outputs/output_audio.mp3')  
+def handle_video_processing():
+    def process_video():
+        print("Extracting frames...")
+        extract_frames.get_frames('uploads/recording.webm', 'outputs/unique_frames')
+        print("Frame extraction complete.")
+        print("Extracting text from frames...")
+        ocr.process_frames('outputs/unique_frames', 'outputs/OCR_result.md')
+        print("OCR complete.")
+        print("Cleaning up OCR results...")
+        llm_calling.process_with_groq('outputs/OCR_result.md', 'cleanup', 'outputs/OCR_cleaned.md')
+        print("Cleanup complete.")
+
+    def process_audio():
+        print("Extracting audio...")
+        extract_audio.get_audio('uploads/recording.webm', 'outputs/output_audio.mp3')
+        print("Audio processing completed.")
+
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        video_future = executor.submit(process_video)
+        audio_future = executor.submit(process_audio)
+
+        # Wait for both threads to finish
+        concurrent.futures.wait([video_future, audio_future])
+
+    print("Both video and audio processing are complete.")
 
     # print("Sending email...")
     # email_service.send_email(submitted_email, '../OCR/result.md')

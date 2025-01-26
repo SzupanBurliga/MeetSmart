@@ -5,35 +5,37 @@ from groq import Groq
 # Load environment variables from .env
 load_dotenv()
 
-def process_with_groq(markdown_file, mode, model="llama-3.3-70b-versatile"):
+def process_with_groq(markdown_file, mode, output_file, model="llama-3.3-70b-versatile"):
     """
     Reads a Markdown file and sends its content as a user message to the Groq API.
+    The response is saved to the specified output file.
 
     Args:
         markdown_file (str): Path to the Markdown file.
         mode (str): Mode to use for generating chat completions.
+        output_file (str): Path to the output Markdown file.
         model (str): Model to use for generating chat completions (default is 'llama-3.3-70b-versatile').
 
     Returns:
-        str: The response content from the Groq API.
+        None: The response is saved to the specified output file.
     """
     
     # Define system messages for different modes
     mode_system_messages = {
         "cleanup": (
             "You will receive a markdown file containing OCR of an online meeting. "
-            "You have to remove irrelevant content and leave only things important to the presentation. "
-            "Cut out things like usernames, UI elements, etc. If a line repeats itself, leave only one of them. "
+            "Cut out things like usernames, UI elements, etc."
+            "Do not change the wording, just remove the unnecessary parts."
             "Do not write any additional info, return just the original content."
         ),
         "merge": (
-            "You will receive a markdown file containing OCR of an online meeting followed up by audio transcription of that meeting"
-            "Your task is to merge the audio transcription with the OCR and put it in correct order considering topics of OCR and transcription."
-            "Keep all of the original information and just rearrange it in a logical order."
-            "Do not add any of your own information"
+            "You will receive a markdown file containing OCR of an online meeting followed up by audio transcription of that meeting. "
+            "Your task is to merge the audio transcription with the OCR and put it in correct order considering topics of OCR and transcription. "
+            "Keep all of the original information and just rearrange it in a logical order. "
+            "Do not add any of your own information."
         ),
         "summarize": (
-            "You will receive a markdown file summarize the content of the meeting."
+            "You will receive a markdown file. Summarize the content of the meeting. "
             "Maintain the original formatting as much as possible."
         )
     }
@@ -73,20 +75,13 @@ def process_with_groq(markdown_file, mode, model="llama-3.3-70b-versatile"):
         model=model,
     )
 
-    # Return the assistant's response
-    return chat_completion.choices[0].message.content
+    # Get the assistant's response
+    response_content = chat_completion.choices[0].message.content
 
+    # Write the response to the output file
+    with open(output_file, "w", encoding="utf-8") as output:
+        output.write(response_content)
 
-# Example usage
-# if __name__ == "__main__":
-#     try:
-#         # Specify the Markdown file and mode
-#         markdown_file = "outputs/ocr_and_transcrytpion.md"
-#         mode = "merge"  # Choose from 'cleanup', 'summarize', 'translate'
-        
-#         # Process the file and print the result
-#         response = process_with_groq(markdown_file, mode)
-#         print("Response:")
-#         print(response)
-#     except Exception as e:
-#         print(f"An error occurred: {e}")
+# Example usage in a different file:
+# from your_module import process_with_groq
+process_with_groq("outputs/OCR_result.md", "cleanup", "outputs/OCR_cleaned.md")
