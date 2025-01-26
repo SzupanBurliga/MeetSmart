@@ -1,18 +1,17 @@
-from spire.pdf import *
-from spire.pdf.common import *
+from spire.doc import *
+from spire.doc.common import *
 
 def MDtoPDF(file_path):
     # Create a Document object
-    document = Document()
+    dokumencik = Document()
 
     # Load a Markdown file
-    document.LoadFromFile(file_path)
+    dokumencik.LoadFromFile(file_path)
 
     # Save it as a pdf file
-    document.SaveToFile("backend/mDtoPDF/ToPdf.pdf", FileFormat.PDF)
+    dokumencik.SaveToFile("backend/md_to_pdf/result.pdf", FileFormat.PDF)
     
     # Dispose resources
-    document.Dispose()
+    dokumencik.Dispose()
 
-#na pdf jest jakis watermark zjebany, ale mozna go olac bo komu sie chce licencje kupować, jako noralni pracownicy oczysicie uzylibysmy licencjonowaneg ooprogramowania ;333
-MDtoPDF('backend/mDtoPDF/markdown-sample.md')
+MDtoPDF('backend/md_to_pdf/sprint11.md')
