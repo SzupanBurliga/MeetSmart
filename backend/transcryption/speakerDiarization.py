@@ -26,7 +26,7 @@ def load_pipeline_from_pretrained(path_to_config: str | Path) -> Pipeline:
 
     return pipeline
 
-PATH_TO_CONFIG = "D:/Studia/IO/MeetSmart/backend/transcryption/models/pyannote_diarization_config.yaml"
+PATH_TO_CONFIG = os.path.abspath("models/pyannote_diarization_config.yaml")
 pipeline = load_pipeline_from_pretrained(PATH_TO_CONFIG)
 
 
@@ -42,7 +42,7 @@ def diarize_audio(wav_file_path):
         })
     
     # Save results to a text file
-    output_dir = '../media_manager/outputs'
+    output_dir = '../outputs'
     os.makedirs(output_dir, exist_ok=True)
     diarization_file_path = os.path.join(output_dir, wav_file_path.rsplit('.', 1)[0] + '_diarization.json')
     with open(diarization_file_path, 'w', encoding='utf-8') as f:
@@ -52,5 +52,5 @@ def diarize_audio(wav_file_path):
     return results
 
 if __name__ == "__main__":
-    audio_file_path = "D:/Studia/IO/MeetSmart/backend/transcryption/plik2.mp3"  # Update this path to the correct location of the audio file
+    audio_file_path = "../outputs/output_audio.mp3"  # Update this path to the correct location of the audio file
     diarize_audio(audio_file_path)

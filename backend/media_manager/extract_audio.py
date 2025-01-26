@@ -20,8 +20,8 @@ def get_audio(video_path, audio_output_path):
         return None
 
 # Example usage:
-video_file_path = './uploads/recording.webm'  # Replace with your video file path
+video_file_path = './uploads/test.mkv'  # Replace with your video file path
 audio_file_path = './outputs/output_audio.mp3'  # Replace with desired audio output file path
 
 
-
+# get_audio(video_file_path, audio_file_path)
