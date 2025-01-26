@@ -66,22 +66,28 @@ def get_job_result(api_key, job_id):
         print(f"Failed to Get Job Result: {response.status_code} {response.text}")
         return None
 
+# Funkcja do sortowania plików numerycznie
+def numeric_sort_key(file_name):
+    # Wyciągamy numer z nazwy pliku (np. frame_10.png -> 10)
+    return int(file_name.split('_')[1].split('.')[0])
+
 # Główna część skryptu
 if __name__ == "__main__":
     if api_key is None:
         print("API key not found. Please check your .env file.")
     else:
-        input_folder = "./frames"  # Folder wejściowy z obrazami
-        output_file = "result.md"  # Plik wynikowy
+        input_folder = "./outputs/unique_frames"  # Folder wejściowy z obrazami
+        output_file = "./outputs/result.md"  # Plik wynikowy
 
         all_markdown = []  # Lista na wszystkie markdowny
 
-        # Iteracja po plikach w folderze
-        for i, file_name in enumerate(sorted(os.listdir(input_folder))):
+        # Pobierz listę plików i posortuj numerycznie
+        file_names = [file_name for file_name in os.listdir(input_folder) if file_name.endswith(".png")]
+        sorted_file_names = sorted(file_names, key=numeric_sort_key)
+
+        # Iteracja po posortowanych plikach
+        for i, file_name in enumerate(sorted_file_names):
             file_path = os.path.join(input_folder, file_name)
-            
-            if not file_name.endswith(".png"):
-                continue  # Pomijaj pliki, które nie są PNG
 
             print(f"Processing {file_path}...")
 

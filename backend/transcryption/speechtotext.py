@@ -19,7 +19,7 @@ def convert_audio_to_text(audio_file_path, diarization_file_path, tolerance=0.15
         })
 
     result = model.transcribe(audio_file_path, word_timestamps=True)
-    output_dir = '../media_manager/outputs'
+    output_dir = '../outputs'
     os.makedirs(output_dir, exist_ok=True)
     text_file_path = os.path.join(output_dir, audio_file_path.rsplit('.', 1)[0] + '_transcription_with_diarization.txt')
     transcription_text = "" 
@@ -44,13 +44,14 @@ def convert_audio_to_text(audio_file_path, diarization_file_path, tolerance=0.15
             else:
                 speakers_str = "Unknown"
             
-            f.write(f"{speakers_str} | {start_time:.2f}s | {end_time:.2f}s | {segment_text}\n")
+            f.write(f"{speakers_str} | {segment_text}\n")
+            #f.write(f"{speakers_str} | {start_time:.2f}s | {end_time:.2f}s | {segment_text}\n")
             transcription_text += f"{speakers_str} | {segment_text}\n"
 
     print(f"Pomyślnie utworzono transkrypcję z diarizacją: {text_file_path}")
     return transcription_text
 
 if __name__ == "__main__":
-    audio_file_path = "D:/Studia/IO/MeetSmart/backend/transcryption/plik2.mp3"  # Update this path to the correct location of the audio file
-    diarization_file_path = "D:/Studia/IO/MeetSmart/backend/transcryption/plik2_diarization.json"  # Update this path to the correct location of the diarization file
+    audio_file_path = "../outputs/output_audio.mp3"  # Update this path to the correct location of the audio file
+    diarization_file_path = "../outputs/output_audio_diarization.json"  # Update this path to the correct location of the diarization file
     convert_audio_to_text(audio_file_path, diarization_file_path)
