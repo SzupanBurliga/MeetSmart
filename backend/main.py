@@ -114,6 +114,10 @@ def handle_video_processing():
         print("Extracting text from frames...")
         ocr.process_frames('outputs/unique_frames', 'outputs/OCR_result.md')
         print("OCR complete.")
+        print("Cleaning up OCR results...")
+        llm_calling.process_with_groq('outputs/OCR_result.md', 'cleanup', 'outputs/OCR_cleaned.md')
+        print("Cleanup complete.")
+
     def process_audio():
         print("Extracting audio...")
         extract_audio.get_audio('uploads/recording.webm', 'outputs/output_audio.mp3')
