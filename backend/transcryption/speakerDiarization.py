@@ -51,6 +51,6 @@ def diarize_audio(wav_file_path):
     print(f"Diarization results saved to {diarization_file_path}")
     return results
 
-# if __name__ == "__main__":
-#     audio_file_path = "output_audio.mp3"  # Update this path to the correct location of the audio file
-#     diarize_audio(audio_file_path)
+if __name__ == "__main__":
+    audio_file_path = "../outputs/output_audio.mp3"  # Update this path to the correct location of the audio file
+    diarize_audio(audio_file_path)

@@ -99,4 +99,4 @@ def get_frames(input_video_path, output_folder):
     extract_unique_frames(cut_video_path, output_folder)
 
 # Call the function to execute the process
-#get_frames()
+#get_frames('uploads/test.mkv', 'outputs/unique_frames')

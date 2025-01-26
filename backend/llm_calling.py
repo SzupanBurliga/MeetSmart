@@ -28,8 +28,9 @@ def process_with_groq(markdown_file, mode, model="llama-3.3-70b-versatile"):
         ),
         "merge": (
             "You will receive a markdown file containing OCR of an online meeting followed up by audio transcription of that meeting"
-            "Ypur task is to corelate the audio transcription with the OCR and put it in correct order"
-            "Do not write any additional info, return just the original content."
+            "Your task is to merge the audio transcription with the OCR and put it in correct order considering topics of OCR and transcription."
+            "Keep all of the original information and just rearrange it in a logical order."
+            "Do not add any of your own information"
         ),
         "summarize": (
             "You will receive a markdown file summarize the content of the meeting."
@@ -80,8 +81,8 @@ def process_with_groq(markdown_file, mode, model="llama-3.3-70b-versatile"):
 # if __name__ == "__main__":
 #     try:
 #         # Specify the Markdown file and mode
-#         markdown_file = "result.md"
-#         mode = "cleanup"  # Choose from 'cleanup', 'summarize', 'translate'
+#         markdown_file = "outputs/ocr_and_transcrytpion.md"
+#         mode = "merge"  # Choose from 'cleanup', 'summarize', 'translate'
         
 #         # Process the file and print the result
 #         response = process_with_groq(markdown_file, mode)
