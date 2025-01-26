@@ -5,7 +5,8 @@ def convert_audio_to_text(audio_file_path, diarization_file_path, tolerance=0.15
 
     model = whisper.load_model("medium")
     language = "pl"
-    
+    word_count = 0
+
     # Read diarization results from the text file
     with open(diarization_file_path, 'r', encoding='utf-8') as f:
         diarization_results = json.load(f)
@@ -46,9 +47,12 @@ def convert_audio_to_text(audio_file_path, diarization_file_path, tolerance=0.15
             
             f.write(f"{speakers_str} | {start_time:.2f}s | {end_time:.2f}s | {segment_text}\n")
             transcription_text += f"{speakers_str} | {segment_text}\n"
-
+            word_count += len(segment_text.split())
+        
+        f.write(f"Word count: {word_count}")
     print(f"Pomyślnie utworzono transkrypcję z diarizacją: {text_file_path}")
     return transcription_text
+
 
 if __name__ == "__main__":
     audio_file_path = "D:/Studia/IO/MeetSmart/backend/transcryption/plik2.mp3"  # Update this path to the correct location of the audio file
