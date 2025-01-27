@@ -68,8 +68,8 @@ def get_job_result(job_id):
 
 # Funkcja do sortowania plików numerycznie
 def numeric_sort_key(file_name):
-    # Wyciągamy numer z nazwy pliku (np. frame_10.png -> 10)
-    return int(file_name.split('_')[1].split('.')[0])
+    # Wyciągamy numer z nazwy pliku w nowym formacie (np. frame_10.00s.png -> 10.00)
+    return float(file_name.split('_')[1].split('s')[0])
 
 # Główna funkcja przetwarzająca obrazy
 def process_frames(input_folder, output_file):
@@ -99,7 +99,8 @@ def process_frames(input_folder, output_file):
                     # 3. Jeśli status jest "SUCCESS", odbieramy wynik
                     markdown_content = get_job_result(job_id)
                     if markdown_content:
-                        all_markdown.append(f"## Slajd {i + 1}\n\n{markdown_content}\n")
+                        timestamp = file_name.split('_')[1].split('s')[0]  # Wyciągnij timestamp z nazwy pliku
+                        all_markdown.append(f"Timestamp:{timestamp}s\n\n{markdown_content}\n")
                     break
                 time.sleep(5)  # Czekaj 5 sekund przed ponownym sprawdzeniem statusu
 
@@ -110,8 +111,8 @@ def process_frames(input_folder, output_file):
     print(f"Results saved to {output_file}")
 
 # Przykład wywołania funkcji w innym pliku
-if __name__ == "__main__":
-    input_folder = "./outputs/unique_frames"  # Folder wejściowy z obrazami
-    output_file = "./outputs/result.md"  # Plik wynikowy
+# if __name__ == "__main__":
+#     input_folder = "./outputs/unique_frames"  # Folder wejściowy z obrazami
+#     output_file = "./outputs/result.md"  # Plik wynikowy
 
-    process_frames(input_folder, output_file)
+#     process_frames(input_folder, output_file)

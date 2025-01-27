@@ -45,8 +45,8 @@ def convert_audio_to_text(audio_file_path, diarization_file_path, tolerance=0.15
             else:
                 speakers_str = "Unknown"
             
-            f.write(f"{speakers_str} | {segment_text}\n")
-            #f.write(f"{speakers_str} | {start_time:.2f}s | {end_time:.2f}s | {segment_text}\n")
+            #f.write(f"{speakers_str} | {segment_text}\n")
+            f.write(f" {start_time:.2f}s | {speakers_str} | {segment_text}\n")
             transcription_text += f"{speakers_str} | {segment_text}\n"
             word_count += len(segment_text.split())
         
@@ -55,7 +55,7 @@ def convert_audio_to_text(audio_file_path, diarization_file_path, tolerance=0.15
     return transcription_text
 
 
-if __name__ == "__main__":
-    audio_file_path = "../outputs/output_audio.mp3"  # Update this path to the correct location of the audio file
-    diarization_file_path = "../outputs/output_audio_diarization.json"  # Update this path to the correct location of the diarization file
-    convert_audio_to_text(audio_file_path, diarization_file_path)
+# if __name__ == "__main__":
+#     audio_file_path = "../outputs/output_audio.mp3"  # Update this path to the correct location of the audio file
+#     diarization_file_path = "../outputs/output_audio_diarization.json"  # Update this path to the correct location of the diarization file
+#     convert_audio_to_text(audio_file_path, diarization_file_path)
