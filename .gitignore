@@ -28,6 +28,7 @@ __pycache__
 *.mp3
 *.png
 *.md
+*.mkv
 venv/
 *.wav
 models/
