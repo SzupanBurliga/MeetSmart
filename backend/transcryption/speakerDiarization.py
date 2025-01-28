@@ -26,7 +26,7 @@ def load_pipeline_from_pretrained(path_to_config: str | Path) -> Pipeline:
 
     return pipeline
 
-PATH_TO_CONFIG = os.path.abspath("models/pyannote_diarization_config.yaml")
+PATH_TO_CONFIG = os.path.abspath("transcryption/models/pyannote_diarization_config.yaml")
 pipeline = load_pipeline_from_pretrained(PATH_TO_CONFIG)
 
 
@@ -42,7 +42,7 @@ def diarize_audio(wav_file_path):
         })
     
     # Save results to a text file
-    output_dir = '../outputs'
+    output_dir = './'
     os.makedirs(output_dir, exist_ok=True)
     diarization_file_path = os.path.join(output_dir, wav_file_path.rsplit('.', 1)[0] + '_diarization.json')
     with open(diarization_file_path, 'w', encoding='utf-8') as f:

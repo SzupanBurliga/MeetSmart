@@ -100,7 +100,7 @@ def process_frames(input_folder, output_file):
                     markdown_content = get_job_result(job_id)
                     if markdown_content:
                         timestamp = file_name.split('_')[1].split('s')[0]  # Wyciągnij timestamp z nazwy pliku
-                        all_markdown.append(f"Timestamp:{timestamp}s\n\n{markdown_content}\n")
+                        all_markdown.append(f"Timestamp: {timestamp}s\n\n{markdown_content}\n")
                     break
                 time.sleep(5)  # Czekaj 5 sekund przed ponownym sprawdzeniem statusu
 
@@ -110,9 +110,9 @@ def process_frames(input_folder, output_file):
 
     print(f"Results saved to {output_file}")
 
-# Przykład wywołania funkcji w innym pliku
-# if __name__ == "__main__":
-#     input_folder = "./outputs/unique_frames"  # Folder wejściowy z obrazami
-#     output_file = "./outputs/result.md"  # Plik wynikowy
+#Przykład wywołania funkcji w innym pliku
+if __name__ == "__main__":
+    input_folder = "./outputs/unique_frames"  # Folder wejściowy z obrazami
+    output_file = "./outputs/result.md"  # Plik wynikowy
 
-#     process_frames(input_folder, output_file)
+    process_frames(input_folder, output_file)

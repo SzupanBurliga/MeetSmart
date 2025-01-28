@@ -1,7 +1,9 @@
-def convert_audio_to_text(audio_file_path, diarization_file_path, tolerance=0.15):
-    import whisper # type: ignore
-    import os
-    import json
+import whisper # type: ignore
+import os
+import json
+
+def convert_audio_to_text(audio_file_path, text_file_path, diarization_file_path="outputs/output_audio_diarization.json", tolerance=0.15):
+
 
     model = whisper.load_model("medium")
     language = "pl"
@@ -20,9 +22,8 @@ def convert_audio_to_text(audio_file_path, diarization_file_path, tolerance=0.15
         })
 
     result = model.transcribe(audio_file_path, word_timestamps=True)
-    output_dir = '../outputs'
+    output_dir = './'
     os.makedirs(output_dir, exist_ok=True)
-    text_file_path = os.path.join(output_dir, audio_file_path.rsplit('.', 1)[0] + '_transcription_with_diarization.txt')
     transcription_text = "" 
     with open(text_file_path, 'w', encoding='utf-8') as f:
         for segment in result["segments"]:
@@ -46,7 +47,7 @@ def convert_audio_to_text(audio_file_path, diarization_file_path, tolerance=0.15
                 speakers_str = "Unknown"
             
             #f.write(f"{speakers_str} | {segment_text}\n")
-            f.write(f" {start_time:.2f}s | {speakers_str} | {segment_text}\n")
+            f.write(f"Timestamp: {start_time:.2f}s | {speakers_str} | {segment_text}\n")
             transcription_text += f"{speakers_str} | {segment_text}\n"
             word_count += len(segment_text.split())
         
@@ -59,3 +60,5 @@ def convert_audio_to_text(audio_file_path, diarization_file_path, tolerance=0.15
 #     audio_file_path = "../outputs/output_audio.mp3"  # Update this path to the correct location of the audio file
 #     diarization_file_path = "../outputs/output_audio_diarization.json"  # Update this path to the correct location of the diarization file
 #     convert_audio_to_text(audio_file_path, diarization_file_path)
+
+#convert_audio_to_text("outputs/output_audio.mp3", "outputs/output_audio_transcription_with_diarization.txt")
