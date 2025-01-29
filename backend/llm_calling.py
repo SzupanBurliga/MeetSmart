@@ -23,10 +23,11 @@ def process_with_groq(markdown_file, mode, output_file, model="llama-3.3-70b-ver
     # Define system messages for different modes
     mode_system_messages = {
         "cleanup": (
-            "You will receive a markdown file containing OCR of an online meeting. "
+            "You will receive a markdown file containing OCR and transcryption of an online meeting. "
             "Cut out things like usernames, UI elements, etc."
-            "Do not change the wording, just remove the unnecessary parts."
-            "Do not write any additional info, return just the original content."
+            "Do not change the wording, just remove parts irrelevant to the topic of the meeting."
+            "Lines begining with 'Timestamp' must stay"
+            "Do not write any additional information, keep the markdown formatting."
         ),
         "merge": (
             "You will receive a markdown file containing OCR of an online meeting followed up by audio transcription of that meeting. "
@@ -84,4 +85,4 @@ def process_with_groq(markdown_file, mode, output_file, model="llama-3.3-70b-ver
 
 # Example usage in a different file:
 # from your_module import process_with_groq
-#process_with_groq("outputs/OCR_result.md", "cleanup", "outputs/OCR_cleaned.md")
+process_with_groq("outputs/OCR_result.md", "cleanup", "outputs/cleaned_result.md")

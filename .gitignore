@@ -29,6 +29,7 @@ __pycache__
 *.png
 *.md
 *.mkv
+*.pdf
 venv/
 *.wav
 models/
