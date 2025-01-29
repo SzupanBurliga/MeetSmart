@@ -7,6 +7,7 @@ import media_manager.extract_audio as extract_audio
 import ocr
 import transcribe
 import email_service
+import md_to_pdf
 import llm_calling
 import merge_files
 # Global variable to store the submitted email
@@ -109,32 +110,39 @@ def run(server_class=HTTPServer, handler_class=SimpleHTTPRequestHandler, port=50
 
 
 def handle_video_processing():
+    OUTPUT_FOLDER='outputs/'
     RECORDED_VIDEO='uploads/recording.webm'
     RECORDING_AUDIO='outputs/output_audio.mp3'
-    OUTPUT_FOLDER='outputs/'
     FRAMES_FOLDER= OUTPUT_FOLDER + 'unique_frames/'
     OCR_RESULT= OUTPUT_FOLDER + 'OCR_result.md'
     OCR_CLEANED= OUTPUT_FOLDER + 'OCR_cleaned.md'
     MERGED_OUTPUT= OUTPUT_FOLDER + 'merged_output.md'
     TRANSCRIPTION_WITH_DIARIZATION= OUTPUT_FOLDER + 'transcription_with_diarization.txt'
+    SUMMARY_MD= OUTPUT_FOLDER + 'summary.md'
+    RAPORT_PDF= OUTPUT_FOLDER + 'raport.pdf'
+    SUMMARY_PDF= OUTPUT_FOLDER + 'summary.pdf'
     def process_video():
+
         print("Extracting frames...")
         extract_frames.get_frames(RECORDED_VIDEO, FRAMES_FOLDER)
         print("Frame extraction complete.")
+
         print("Extracting text from frames...")
         ocr.process_frames(FRAMES_FOLDER, OCR_RESULT)
         print("OCR complete.")
+
         print("Cleaning up OCR results...")
-        # llm_calling.process_with_groq(OCR_RESULT, 'cleanup', OCR_CLEANED)
-        # print("Cleanup complete.")
+        llm_calling.process_with_groq(OCR_RESULT, 'cleanup', OCR_CLEANED)
+        print("Cleanup complete.")
 
     def process_audio():
         print("Extracting audio...")
         extract_audio.get_audio(RECORDED_VIDEO, RECORDING_AUDIO)
-        print("Audio processing completed.")
+        print("Audio extracting completed.")
+
         print("Transcribing audio...")
         transcribe.transcribe_audio(RECORDING_AUDIO, TRANSCRIPTION_WITH_DIARIZATION)
-
+        print("Transcription complete.")
 
     with concurrent.futures.ThreadPoolExecutor() as executor:
         video_future = executor.submit(process_video)
@@ -142,16 +150,24 @@ def handle_video_processing():
 
         # Wait for both threads to finish
         concurrent.futures.wait([video_future, audio_future])
-
     print("Both video and audio processing are complete.")
-    print("Merging files...")
-    merge_files.process_and_merge_files(TRANSCRIPTION_WITH_DIARIZATION, OCR_RESULT, MERGED_OUTPUT)
 
+    print("Merging files...")
+    merge_files.process_and_merge_files(TRANSCRIPTION_WITH_DIARIZATION, OCR_CLEANED, MERGED_OUTPUT)
+    print("Merge complete.")
+
+    print("Summarizing the meeting...")
+    llm_calling.process_with_groq(MERGED_OUTPUT, 'summarize', SUMMARY_MD)
+    print("Summary complete.")
     
-    # print("Sending email...")
-    # email_service.send_email(submitted_email, '../OCR/result.md')
-    #  narazie nie działa bo import trzeba naprawić
+    print("Generating pdfs...")
+    md_to_pdf.convert(SUMMARY_MD, SUMMARY_PDF)
+    md_to_pdf.convert(MERGED_OUTPUT, RAPORT_PDF)    
+    print("PDF generation complete.")
+
+    print("Sending email...")
+    email_service.send_email(submitted_email, [RAPORT_PDF, SUMMARY_PDF])
+    print("Email sent.")
     
 if __name__ == '__main__':
     run()
-# handle_video_processing()

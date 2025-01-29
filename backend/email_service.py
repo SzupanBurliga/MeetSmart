@@ -6,14 +6,13 @@ from email import encoders
 import os
 from dotenv import load_dotenv
 
-
-def send_email(recipient_email, file_path, subject="Your Document", body="Please find your document attached."):
+def send_email(recipient_email, file_paths, subject="Your Document", body="Please find your documents attached."):
     """
-    Send any file as an email attachment using Gmail SMTP
+    Send files as email attachments using Gmail SMTP
     
     Parameters:
     - recipient_email (str): Email address of the recipient
-    - file_path (str): Path to the file to be sent
+    - file_paths (list): List of file paths to be sent as attachments
     - subject (str): Email subject line (optional)
     - body (str): Email body text (optional)
     
@@ -27,28 +26,33 @@ def send_email(recipient_email, file_path, subject="Your Document", body="Please
     if not all([sender_email, sender_password]):
         print("Error: Email credentials not found in .env file")
         return False
+
     msg = MIMEMultipart()
     msg['From'] = sender_email
     msg['To'] = recipient_email
     msg['Subject'] = subject
     msg.attach(MIMEText(body, 'plain'))
-    if not os.path.exists(file_path):
-        print(f"Error: The file '{file_path}' does not exist.")
-        return False
-    try:
-        with open(file_path, 'rb') as attachment:
-            part = MIMEBase('application', 'octet-stream')
-            part.set_payload(attachment.read())
-        
-        encoders.encode_base64(part)
-        part.add_header(
-            'Content-Disposition',
-            f'attachment; filename={os.path.basename(file_path)}'
-        )
-        msg.attach(part)
-    except Exception as e:
-        print(f"Error preparing attachment: {e}")
-        return False
+
+    for file_path in file_paths:
+        if not os.path.exists(file_path):
+            print(f"Error: The file '{file_path}' does not exist.")
+            return False
+
+        try:
+            with open(file_path, 'rb') as attachment:
+                part = MIMEBase('application', 'octet-stream')
+                part.set_payload(attachment.read())
+
+            encoders.encode_base64(part)
+            part.add_header(
+                'Content-Disposition',
+                f'attachment; filename={os.path.basename(file_path)}'
+            )
+            msg.attach(part)
+        except Exception as e:
+            print(f"Error preparing attachment '{file_path}': {e}")
+            return False
+
     try:
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
@@ -60,4 +64,3 @@ def send_email(recipient_email, file_path, subject="Your Document", body="Please
     except Exception as e:
         print(f"Error sending email: {e}")
         return False
-    
