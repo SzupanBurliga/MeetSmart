@@ -1,3 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+body {
+  font-family: 'Roboto', sans-serif;
+}
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -57,34 +63,57 @@
   font-size: 1rem;
   cursor: pointer;
 }
+.email-input-group {
+  display: flex;
+  gap: 8px;
+}
+
+.email-input-group input {
+  padding: 1vh;
+  border: 1px solid #ccc;
+  border-radius: 13px; 
+  outline: none;
+}
+
+.email-input-group button {
+  padding: 1.1vh 2vh;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 13px; 
+  cursor: pointer;
+}
+
+.email-input-group button:hover {
+  background-color: #0056b3;
+}
 .recording-button {
   padding: 0.5rem 1rem;
   font-size: 1rem;
   cursor: pointer;
 }
 
-/* Add these styles to `MeetSmart/src/App.css` */
 .email-input-group {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 1rem;
+  margin-bottom: 3rem;
 }
 
 .recording-button {
   padding: 0.5rem 1rem;
-  font-size: 1rem;
+  font-size: 3rem;
   cursor: pointer;
 }
 
 .recording-button.start {
-  background-color: lightgreen;
+  background-color: rgb(8, 199, 8);
 }
 
 .recording-button.stop {
   background-color: lightcoral;
 }
-/* Add these styles to `MeetSmart/src/App.css` */
-/* Add these styles to `MeetSmart/src/App.css` */
+
 .validation-message {
   color: red;
   font-size: 0.875rem;
@@ -93,6 +122,10 @@
 
 .success-message {
   color: green;
-  font-size: 0.875rem;
+  font-size: 1.1rem;
   margin-top: 0.5rem;
+}
+.title {
+  font-size: 6rem;
+  margin-bottom: 7rem;
 }

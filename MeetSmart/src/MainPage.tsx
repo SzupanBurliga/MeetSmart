@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect} from 'react';
 import './App.css';
 import RecordingComponent from './RecordingComponent';
 
@@ -7,6 +7,15 @@ function EmailForm() {
     const [isEmailSubmitted, setIsEmailSubmitted] = useState(false);
     const [validationMessage, setValidationMessage] = useState('');
     const [successMessage, setSuccessMessage] = useState('');
+
+    useEffect(() => {
+        if (successMessage) {
+            const timer = setTimeout(() => {
+                setSuccessMessage('');
+            }, 3000);
+            return () => clearTimeout(timer);
+        }
+    }, [successMessage]);
 
     const validateEmail = (email: string) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -62,7 +71,7 @@ function EmailForm() {
 
     return (
         <div className="email-form">
-            <h1>Notes from a meeting</h1>
+            <h1 className="title">Notes from a meeting</h1>
             <div>
                 <div className="email-input-group">
                     <input

@@ -75,7 +75,7 @@ const RecordingComponent: React.FC<RecordingComponentProps> = ({ isEmailSubmitte
                     const blob = new Blob(chunksRef.current, { type: 'video/webm' });
                     setRecordedVideoUrl(URL.createObjectURL(blob));
                     chunksRef.current = [];
-                    uploadRecording(blob); // Upload the recording
+                    uploadRecording(blob);
                 };
 
                 mediaRecorder.start();
@@ -108,15 +108,9 @@ const RecordingComponent: React.FC<RecordingComponentProps> = ({ isEmailSubmitte
             {recordingErrorMessage && <p className="error-message">{recordingErrorMessage}</p>}
             {recordedVideoUrl && (
                 <div style={{ marginTop: '20px' }}>
-                    <h2>Recorded Video:</h2>
-                    <video
-                        src={recordedVideoUrl}
-                        controls
-                        style={{ width: '100%', maxWidth: '600px' }}
-                    />
+                    <h2 className="success-message">Video recorded successfully</h2>
                 </div>
             )}
-            {uploadStatus && <p>{uploadStatus}</p>}
         </div>
     );
 };
