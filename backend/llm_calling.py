@@ -85,4 +85,5 @@ def process_with_groq(markdown_file, mode, output_file, model="llama-3.3-70b-ver
 
 # Example usage in a different file:
 # from your_module import process_with_groq
-process_with_groq("outputs/OCR_result.md", "cleanup", "outputs/cleaned_result.md")
+
+# process_with_groq("outputs/OCR_result.md", "cleanup", "outputs/cleaned_result.md")

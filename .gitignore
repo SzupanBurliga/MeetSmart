@@ -32,6 +32,5 @@ __pycache__
 *.pdf
 venv/
 *.wav
-models/
 *.json
 *.txt
