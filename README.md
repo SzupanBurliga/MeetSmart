@@ -19,11 +19,8 @@ cd MeetSmart
 ```
 
 ### 2. Setting up environment variables
-Create a `.env` file in both the `./backend` folder with the necessary API keys and configurations.
+Create a `.env` file in the `./backend` folder with the necessary API keys and configurations:
 
-
-
-#### Example `.env` file (Backend - `./backend/.env`):
 ```
 LLAMACLOUD_KEY="your_api_key_from_llamacloud.com"
 
