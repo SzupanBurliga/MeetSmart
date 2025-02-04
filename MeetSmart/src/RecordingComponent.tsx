@@ -94,7 +94,7 @@ const RecordingComponent: React.FC<RecordingComponentProps> = ({ isEmailSubmitte
                     className="recording-button stop"
                     disabled={!isEmailSubmitted}
                 >
-                    Zatrzymaj nagrywanie
+                    Stop recording
                 </button>
             ) : (
                 <button
@@ -102,15 +102,16 @@ const RecordingComponent: React.FC<RecordingComponentProps> = ({ isEmailSubmitte
                     className="recording-button start"
                     disabled={!isEmailSubmitted}
                 >
-                    Rozpocznij nagrywanie
+                    Start recording
                 </button>
             )}
             {recordingErrorMessage && <p className="error-message">{recordingErrorMessage}</p>}
             {recordedVideoUrl && (
                 <div style={{ marginTop: '20px' }}>
-                    <h2 className="success-message">Pomyślnie nagrano video</h2>
+                    <h2 className="success-message">Video recorded successfully</h2>
                 </div>
             )}
+            {uploadStatus && <p className="upload-status">{uploadStatus}</p>}
         </div>
     );
 };
