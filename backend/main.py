@@ -121,6 +121,10 @@ def handle_video_processing():
     SUMMARY_MD= OUTPUT_FOLDER + 'summary.md'
     RAPORT_PDF= OUTPUT_FOLDER + 'raport.pdf'
     SUMMARY_PDF= OUTPUT_FOLDER + 'summary.pdf'
+
+    os.makedirs(OUTPUT_FOLDER, exist_ok=True)
+    os.makedirs(FRAMES_FOLDER, exist_ok=True)
+    
     def process_video():
 
         print("Extracting frames...")
