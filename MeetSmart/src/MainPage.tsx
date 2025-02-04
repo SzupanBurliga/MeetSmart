@@ -45,7 +45,7 @@ function EmailForm() {
 
     const handleSubmit = async () => {
         if (!validateEmail(email)) {
-            setValidationMessage('Invalid email format');
+            setValidationMessage('Nieprawidłowy format email');
             setSuccessMessage('');
             return;
         }
@@ -54,10 +54,10 @@ function EmailForm() {
 
         if (isEmailSent) {
             setValidationMessage('');
-            setSuccessMessage('Email submitted successfully');
+            setSuccessMessage('Email wysłany pomyślnie');
             setIsEmailSubmitted(true);
         } else {
-            setValidationMessage('Failed to submit email. Please try again.');
+            setValidationMessage('Niestety nie udało, spróbuj ponownie');
             setSuccessMessage('');
         }
     };
@@ -71,18 +71,18 @@ function EmailForm() {
 
     return (
         <div className="email-form">
-            <h1 className="title">Notes from a meeting</h1>
+            <h1 className="title">Notatki ze spotkania</h1>
             <div>
                 <div className="email-input-group">
                     <input
                         type="email"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Enter your email"
+                        placeholder="Wprawadź swój email"
                         disabled={isEmailSubmitted}
                     />
                     <button onClick={isEmailSubmitted ? handleClear : handleSubmit}>
-                        {isEmailSubmitted ? 'Edit' : 'Submit'}
+                        {isEmailSubmitted ? 'Edytuj' : 'Wyślij'}
                     </button>
                 </div>
                 {validationMessage && <p className="validation-message">{validationMessage}</p>}
