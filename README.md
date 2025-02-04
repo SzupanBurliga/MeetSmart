@@ -1,6 +1,5 @@
 # MeetSmart
 
-MeetSmart is a web application that helps users schedule and manage meetings efficiently. This repository contains both the frontend (React) and backend (Python) components of the application.
 
 ## Prerequisites
 Before running the application, ensure you have the following installed:
@@ -40,7 +39,6 @@ source venv/bin/activate  # On Windows use: venv\Scripts\activate
 pip install -r requirements.txt
 python main.py
 ```
-The backend will now be running at `http://localhost:5000`.
 
 ### 2. Start the Frontend (React)
 ```sh
