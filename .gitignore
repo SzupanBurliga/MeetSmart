@@ -34,3 +34,4 @@ venv/
 *.wav
 *.json
 *.txt
+!requirements.txt
