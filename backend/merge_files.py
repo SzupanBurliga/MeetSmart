@@ -8,7 +8,7 @@ def process_and_merge_files(transcription_file, ocr_file, output_file):
         word_count_line = None
         with open(file_path, 'r', encoding='utf-8') as file:
             for line in file:
-                if line.startswith("Word count"):
+                if line.startswith("Liczba słów wypowiedzianych podczas spotkania:"):
                     word_count_line = line.strip()  # Zapisz linię "Word count"
                     continue  # Przejdź do następnej linii
                 match = re.match(r"Timestamp: ([\d.]+)s \| (.+)", line)
