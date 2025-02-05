@@ -3,10 +3,8 @@ import requests
 from dotenv import load_dotenv
 import os
 
-# Załaduj zmienne z pliku .env
 load_dotenv()
 
-# Pobierz klucz API z pliku .env
 api_key = os.getenv("LLAMACLOUD_KEY")
 
 # Funkcja do wysyłania pliku
@@ -25,7 +23,7 @@ def upload_file(file_path):
     response = requests.post(url, headers=headers, data=data, files=files)
     if response.status_code == 200:
         print(f"Upload Successful for {file_path}: {response.json()}")
-        return response.json().get("id")  # Zwraca ID z odpowiedzi
+        return response.json().get("id")  
     else:
         print(f"Upload Failed for {file_path}: {response.status_code} {response.text}")
         return None
@@ -110,7 +108,6 @@ def process_frames(input_folder, output_file):
 
     print(f"Results saved to {output_file}")
 
-#Przykład wywołania funkcji w innym pliku
 if __name__ == "__main__":
     input_folder = "./outputs/unique_frames"  # Folder wejściowy z obrazami
     output_file = "./outputs/result.md"  # Plik wynikowy
