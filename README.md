@@ -31,9 +31,9 @@ MeetSmart/ docker compose up --build -d
 ```
 The frontend will now be running at `http://localhost:3000` 🎊
 
+# Running the Application locally 💻
 
-
-## Prerequisites for running app locally ✅
+## Prerequisites ✅
 Before running the application, ensure you have the following installed:
 - 📌 [Node.js](https://nodejs.org/)
 - 🐍 [Python 3](https://www.python.org/)
