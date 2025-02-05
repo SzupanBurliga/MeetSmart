@@ -124,6 +124,7 @@ def handle_video_processing():
 
     os.makedirs(OUTPUT_FOLDER, exist_ok=True)
     os.makedirs(FRAMES_FOLDER, exist_ok=True)
+    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     
     def process_video():
 
@@ -172,6 +173,25 @@ def handle_video_processing():
     print("Sending email...")
     email_service.send_email(submitted_email, [RAPORT_PDF, SUMMARY_PDF])
     print("Email sent.")
-    
+
+    print("Cleaning up temporary files...")
+    for root, dirs, files in os.walk(OUTPUT_FOLDER, topdown=False):
+        for file in files:
+            os.remove(os.path.join(root, file))
+        for dir in dirs:
+            os.rmdir(os.path.join(root, dir))
+    os.rmdir(OUTPUT_FOLDER)  # Remove the empty OUTPUT_FOLDER
+
+    # Remove all files in UPLOAD_FOLDER
+    for root, dirs, files in os.walk(UPLOAD_FOLDER, topdown=False):
+        for file in files:
+            os.remove(os.path.join(root, file))
+        for dir in dirs:
+            os.rmdir(os.path.join(root, dir))
+    os.rmdir(UPLOAD_FOLDER)  # Remove the empty UPLOAD_FOLDER
+
+    print("File cleanup complete.")
+
+
 if __name__ == '__main__':
     run()
