@@ -51,7 +51,7 @@ def convert_audio_to_text(audio_file_path, text_file_path, diarization_file_path
             transcription_text += f"{speakers_str} | {segment_text}\n"
             word_count += len(segment_text.split())
         
-        f.write(f"Word count: {word_count}")
+        f.write(f"Liczba słów wypowiedzianch podczas spotkania: {word_count}")
     print(f"Pomyślnie utworzono transkrypcję z diarizacją: {text_file_path}")
     return transcription_text
 
